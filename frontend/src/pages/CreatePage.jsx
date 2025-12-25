@@ -36,10 +36,6 @@ const CreatePage = () => {
       if (error.response.status === 429) {
         toast.error("Slow down kid..", { duration: 4000, icon: "❌" })
       }
-
-      console.log(error)
-
-
     }
 
 
@@ -106,10 +102,10 @@ const CreatePage = () => {
                     }}
                     className="btn btn-ghost"
                   >
-                    
-                      Cancel
-                    
-                    
+
+                    Cancel
+
+
                   </button>
                   <button
                     onClick={handleSubmit}

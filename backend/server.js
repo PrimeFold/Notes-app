@@ -4,45 +4,43 @@ import connectDB from './config/db.js'
 import dotenv from 'dotenv'
 import rateLimiter from './middleware/rateLimiter.js'
 import cors from 'cors'
+import path from 'path'
 
 dotenv.config()
- 
-
-
 
 const app = express()
+const port = process.env.PORT || 3000
+const __dirname = path.resolve()
 
+// CORS for development
+if (process.env.NODE_ENV !== 'production') {
+    app.use(cors({
+        origin: "http://localhost:5173",
+    }))
+}
 
-app.use(cors({
-    origin: "http://localhost:5173", // This should be the URL of your frontend application
-})) 
+// Body parser
+app.use(express.json())
 
-app.use(express.json()) //this middleware will parse the json files..
-
-
-
-
-//the middlewares we're using..
+// Rate limiter
 app.use(rateLimiter)
 
+// API routes
+app.use("/api/notes", notesRouter)
 
+// Serve frontend in production
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../frontend/dist')))
 
-app.use("/api/notes",notesRouter)
+    // SPA fallback route
+    app.get(/.*/, (req, res) => {
+        res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
+    })
+}
 
-
-//this is our simple custom middleware
-//app.use((req,res,next)=>{
-//   console.log("We have received a new req")
-//    next()
-//})
-
-const port = process.env.PORT || 3000;
-
-connectDB().then(()=>{
-    app.listen(port,()=>{
-        console.log("Server started on : ",port)
+// Connect to DB and start server
+connectDB().then(() => {
+    app.listen(port, () => {
+        console.log(`Server running on port ${port}`)
     })
 })
-
-
-

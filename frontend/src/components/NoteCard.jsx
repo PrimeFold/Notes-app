@@ -15,7 +15,6 @@ const NoteCard = ({ note }) => {
             await api.delete(`/notes/${note._id}`)
             window.location.reload()
         } catch (error) {
-            console.error("Error deleting note:", error)
         }
     }
 

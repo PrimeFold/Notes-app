@@ -3,11 +3,9 @@ import Note from "../notes/notes.js";
 export async function getAllNotes(req, res) {
     try {
         const notes = await Note.find()
-        console.log(`Fetched ${notes.length} notes from DB`)
         res.status(200).json(notes)
 
     } catch (error) {
-        console.log("Error getting notes..")
         res.status(500).json({ message: "Internal Server Error.." })
     }
 }
@@ -18,7 +16,6 @@ export async function getNote(req, res) {
         const n = await Note.findById(req.params.id)
         res.status(200).json(n)
     } catch (error) {
-        console.log("Error getting the note..")
         res.status(500).json({ message: "Internal Server Error...." })
     }
 }
